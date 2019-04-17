@@ -1,60 +1,65 @@
 <template>
     <div>
+        <div>
+            <ul>
+            <li >
+                <a href="https://www.facebook.com/fardcrex"  target=”_blank” class="face">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-facebook" aria-hidden="true"></span>
+                </a>
+            </li>
+        </ul>
         <ul>
-        <li >
-            <a href="#" class="face">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span class="fa fa-facebook" aria-hidden="true"></span>
-            </a>
-        </li>
-    </ul>
-    <ul>
-        <li class="twitter">
-            <a href="#">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span class="fa fa-twitter" aria-hidden="true"></span>
-            </a>
-        </li>
-    </ul>
-    <ul>
-        <li>
-            <a href="#" class="google">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span class="fa fa-google-plus" aria-hidden="true"></span>
-            </a>
-        </li>
-    </ul>
-    <ul>
-        <li>
-            <a href="#" class="linkedin">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span class="fa fa-linkedin" aria-hidden="true"></span>
-            </a>
-        </li>
-    </ul>
-    <ul>
-        <li>
-            <a href="#" class="instam">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span class="fa fa-instagram" aria-hidden="true"></span>
-            </a>
-        </li>
-    </ul>
+            <li class="twitter">
+                <a href="https://twitter.com/fardcrex"  target=”_blank”>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-twitter" aria-hidden="true"></span>
+                </a>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a href="#" class="google">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-google-plus" aria-hidden="true"></span>
+                </a>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a href="https://www.linkedin.com/in/jair-pool-conislla-bocangel-a6931579/"  target=”_blank” class="linkedin">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-linkedin" aria-hidden="true"></span>
+                </a>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a href="https://www.instagram.com/fardcrex/?hl=es-la"  target=”_blank” class="instam">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-instagram" aria-hidden="true"></span>
+                </a>
+            </li>
+        </ul>
+        </div>
+   <h3>
+       Mis redes sociales
+   </h3>
     </div>
 </template>
 <script>
@@ -143,5 +148,7 @@ ul li:hover span:nth-child(1){
 .instam span {
     background: #e4405f
 }
-
+h3{
+    margin-top: 10rem
+}
 </style>

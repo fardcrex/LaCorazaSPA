@@ -6,6 +6,7 @@
             <label for="lname">Contraseña </label>
             <input v-model="credencialesIngresar.password" type="password" id="lname" name="lastname" placeholder="Tu Contraseña..">
             <input type="submit" value="Entrar" >
+            <p>{{mensajeRespuesta}}</p>
             <p class="botonChange" v-on:click="cambiarFormulario">Registrarse</p>
         </div>   
     </form>
@@ -13,6 +14,7 @@
 <script>
 import axios from 'axios'
 import { async } from 'q';
+import config from '../../config.js'
 export default {
 
     data() {
@@ -20,27 +22,33 @@ export default {
             credencialesIngresar:{
                 correo:"",
                 password:""
-            }           
+            },
+            mensajeRespuesta:""         
         }
     },
 
     methods:{          
         loguearse: async function(){ 
-        let response 
-        try {
-        response =await axios.post("http://www.lacoraza.com:8080/TokenServer/getToken",this.credencialesIngresar)
-            
-        } catch (error) {
-            console.log(error);
-        }
-        if(response.data.Token){
-            localStorage.token = response.data.Token
-            localStorage.usuario = JSON.stringify(response.data.Usuario)
-
-            await this.$store.dispatch("getDataUsuarios")
-            
-        }
-            
+          this.mensajeRespuesta = "Ingresando ..."
+          let response 
+          try {
+          response =await axios.post(config.URL_getToken,this.credencialesIngresar)
+            if(response.status==200){
+              this.mensajeRespuesta = "Usuario Inexistente" 
+            }
+              console.log(response);
+          } catch (error) {
+              console.log(error);
+          }
+          if(response.data.Token){
+              localStorage.token = response.data.Token
+              localStorage.usuario = JSON.stringify(response.data.Usuario)
+              await this.$store.dispatch("getDataUsuarios")
+                           
+          }
+          if(this.credencialesIngresar.correo=="" || this.credencialesIngresar.password=="" ){
+            this.mensajeRespuesta = "Campos vacìos"
+          }
         },
         cambiarFormulario: async function(){
         this.credencialesIngresar.correo=""
@@ -73,7 +81,7 @@ input[type=password], select {
 
 input[type=submit] {
   width: 100%;
-  background-color: #4CAF50;
+  background-color: #008338;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;

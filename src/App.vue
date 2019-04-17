@@ -2,7 +2,7 @@
   <div id="app" :class="fondo">
     <div id="nav">
       <template v-for="link in menu"  >
-        <router-link v-bind:key="link.id"  :to="{ name: link.name}">{{link.name}}</router-link> |
+        <router-link v-bind:key="link.id" v-if="link"  :to="{ name: link.name}">{{link.name}}</router-link> |
       </template> 
     </div>
   
@@ -30,9 +30,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$router);
-      
-
     if(localStorage.token && !this.$store.state.usuario){
         
       let menu =  JSON.parse(localStorage.Menu)
@@ -83,10 +80,11 @@ body{
   z-index: 100;
   margin: auto;
   a {
+    font-size: 1.5em;
     font-weight: bold;
     color: #2c3e50;
     &.router-link-exact-active {
-      color: #42b983;
+      color: #008338;
     }
   }
 }

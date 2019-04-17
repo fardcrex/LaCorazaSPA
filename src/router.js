@@ -13,6 +13,7 @@ import Perfil from './views/Perfil.vue'
 import About from './views/About.vue'
 import store from './store';
 import axios from 'axios'
+import config from './config'
 Vue.use(Router)
 
 let router = new Router({
@@ -92,30 +93,31 @@ let router = new Router({
       component: Perfil,
       meta:{
         autenticado: true
-      }
-    }]
+      }},
+      { path: '*',redirect:'/Home' }
+    ]
 })
 router.beforeEach(async (to,from,next)=>{  
   if(to.matched.some( (record) => record.meta.autenticado)){
     if(!localStorage.token){
-      console.log(`no token`); 
+     // console.log(`no token`); 
       next({name:'Home'})
     }else if(store.state.usuario){
-      console.log(`si usuario`);
+      //console.log(`si usuario`);
       next()
     }else{      
-      console.log(`no usuario`);
+     // console.log(`no usuario`);
       let token = localStorage.token      
       axios.defaults.headers.common['Authorization'] =`Bearer ${token}`
-      axios.get(`http://www.lacoraza.com:8080/TokenServer/v1/opciones`).
+      axios.get(config.URL_opciones).
       then( response=>{        
       //  console.log(to);
         if(response.status==202){
           if(to.name==="Perfil"){
-            console.log(`no ////////`);
+           
             next()
           }else{
-          console.log(`no /////zzzzzz///`);
+        
           let dSuscripciones=response.data.reduce(function (obj, item) { 
             obj[item.name] = item; 
             return obj; }, {});
@@ -133,7 +135,7 @@ router.beforeEach(async (to,from,next)=>{
         next({name:'Home'})
       })
     }  
-    console.log(`router`);    
+    //console.log(`router`);    
     
   }else{
     next()
