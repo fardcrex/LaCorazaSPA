@@ -22,7 +22,7 @@
                 <p>Gana hasta tres suscripciones a nuestras zonas</p>
               <!--   <p>-zona muggle:28%   -zona verano y otoño 22%</p>
                 <p>-zona black: 16%   -zona premium: 11%</p> -->
-                <input v-if="!generar" class="botonGenerar" type="submit"  value="Participar!" v-on:click="generarSucripcionesResultado">
+                <input v-show="!generar" class="botonGenerar" type="submit"  value="Participar!" v-on:click="generarSucripcionesResultado">
                 <div class="espacio">
                     <p v-if="generar">resultados:</p>
                      <ul v-if="generar">
@@ -32,7 +32,8 @@
                     </ul>
                 </div>
                
-                <input v-if="generar"  class="botonSalir" type="submit" value="Confirmar" v-on:click="confirmar">
+                <input v-show="generar"  class="botonSalir" type="submit" value="Confirmar" v-on:click="confirmar">
+                <input v-show="generar"  class="botonNewIntento" type="submit" value="Otro intento" v-on:click="generar = !generar">
             </div>
         </div>
         <input class="botonSalir" type="submit" value="Salir" v-on:click="Salir">
@@ -42,6 +43,7 @@
 </template>
 <script>
 import axios from 'axios'
+import config from '../config.js'
 export default {
     data() {
         return {
@@ -93,18 +95,18 @@ export default {
                     if(indice<6 && sucripcionesList[5]){
                         sucripcionesResultado.push(sucripcionesList[5])
                          sucripcionesList[5]=null                
-                    }else if(indice<10 && sucripcionesList[6]){
-                        sucripcionesList[6]=null
+                    }else if(indice<10 && sucripcionesList[8]){
                         sucripcionesResultado.push(sucripcionesList[8]) 
-                    }else if(indice<14 && sucripcionesList[7]){
-                        sucripcionesList[7]=null
-                        sucripcionesResultado.push(sucripcionesList[9]) 
-                    }else if(indice<17 && sucripcionesList[8]){
                         sucripcionesList[8]=null
-                        sucripcionesResultado.push(sucripcionesList[6]) 
-                    }else if(indice<19 && sucripcionesList[9]){
+                    }else if(indice<14 && sucripcionesList[9]){                        
+                        sucripcionesResultado.push(sucripcionesList[9]) 
                         sucripcionesList[9]=null
+                    }else if(indice<17 && sucripcionesList[6]){                       
+                        sucripcionesResultado.push(sucripcionesList[6]) 
+                         sucripcionesList[6]=null
+                    }else if(indice<19 && sucripcionesList[7]){                        
                         sucripcionesResultado.push(sucripcionesList[7]) 
+                        sucripcionesList[7]=null
                     }else{
                         continue
                     }                   
@@ -115,17 +117,18 @@ export default {
                 }
             }
           this.sucripcionesResultado=[...sucripcionesResultado]
+          console.log(this.sucripcionesResultado);
           this.generar=true
         },        
         getNumeros:function(máximo,mínimo){
             return Math.floor(Math.random() * ((máximo+1) - mínimo) + mínimo);
         },
         confirmar: async function(){
-            
+            console.log(this.sucripcionesResultado);
             let token = localStorage.token
             axios.defaults.headers.common['Authorization'] =`Bearer ${token}`
-            let res = await axios.post("http://www.lacoraza.com:8080/TokenServer/v1/opciones",this.sucripcionesResultado)
-           console.log(res);
+            let res = await axios.post(config.URL_opciones,this.sucripcionesResultado)
+           
            localStorage.Menu = JSON.stringify(this.sucripcionesResultado)
            this.$store.commit('actualizarMenu', this.sucripcionesResultado)
            this.generar=!this.generar
@@ -151,6 +154,16 @@ export default {
 
     .botonSalir:hover {
     background-color: #45a049;
+    }
+    .botonNewIntento{
+        width: 20%;
+        background-color: rgb(241, 75, 75);
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
     .botonGenerar {
         width:20%;
