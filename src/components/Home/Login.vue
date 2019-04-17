@@ -36,7 +36,7 @@ export default {
             if(response.status==200){
               this.mensajeRespuesta = "Usuario Inexistente" 
             }
-              console.log(response);
+              
           } catch (error) {
               console.log(error);
           }

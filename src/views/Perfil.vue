@@ -4,8 +4,7 @@
             <div class="container__perfil">
                 <h2>
                     Perfil
-                </h2>
-                <img v-if="usuario" :src="usuario.imagen" alt="">
+                </h2>                
                 <h1 v-if="usuario">{{usuario.nombre}}</h1>
                 <p v-if="usuario">correo: {{usuario.correo}}</p>
                 <h3>Tus suscripiones</h3>
@@ -117,14 +116,14 @@ export default {
                 }
             }
           this.sucripcionesResultado=[...sucripcionesResultado]
-          console.log(this.sucripcionesResultado);
+          
           this.generar=true
         },        
         getNumeros:function(máximo,mínimo){
             return Math.floor(Math.random() * ((máximo+1) - mínimo) + mínimo);
         },
         confirmar: async function(){
-            console.log(this.sucripcionesResultado);
+            
             let token = localStorage.token
             axios.defaults.headers.common['Authorization'] =`Bearer ${token}`
             let res = await axios.post(config.URL_opciones,this.sucripcionesResultado)

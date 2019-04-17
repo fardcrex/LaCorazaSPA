@@ -54,7 +54,7 @@ body{
    position: absolute;
   padding: 0;
     width: 100%;
-    min-height: 100vh;
+   height: 100vh;
 }
 .normal{
   background: radial-gradient(rgb(243, 255, 245),#b5f4ff)
@@ -84,7 +84,8 @@ body{
     font-weight: bold;
     color: #2c3e50;
     &.router-link-exact-active {
-      color: #008338;
+      color: #fa500d;
+      font-size: 1.7rem
     }
   }
 }

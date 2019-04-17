@@ -1,5 +1,5 @@
-
-let URL_Base = "http://localhost:8090/JavaJuniorAppBackend/"
+let URL_Base = "https://www.lacoraza.com/TokenServer/"
+//let URL_Base = "http://localhost:8090/JavaJuniorAppBackend/"
 
 let config = {
     URL_usuarios : `${URL_Base}v1/usuarios`,
