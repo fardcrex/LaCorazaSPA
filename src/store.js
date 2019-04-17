@@ -28,20 +28,20 @@ export default new Vuex.Store({
   actions: {
     async getDataUsuarios({commit,state}){
 
-      console.log(`store`);
-        let token = localStorage.token,
-            usuario = JSON.parse(localStorage.usuario)
-            
-      
-        axios.defaults.headers.common['Authorization'] =`Bearer ${token}`  
-        axios.all([
+         
+      let usuario = JSON.parse(localStorage.usuario),        
+          token = localStorage.token
+
+        
+      axios.defaults.headers.common['Authorization'] =`Bearer ${token}`  
+      axios.all([
           axios.get(`http://www.lacoraza.com:8080/TokenServer/v1/opciones`),
           axios.get(`http://www.lacoraza.com:8080/TokenServer/v1/usuarios/${usuario.id}`)
         ])
         .then(axios.spread((response1, response2) => {
           
           
-          if(response2.data.nombre){
+          if(response2.data.correo){
             
             commit('actualizarMenu',response1.data)
             commit('actualizarUsuario',response2.data)

@@ -2,11 +2,14 @@
     <form  v-on:submit.prevent="registrarse">
       <div class="container__form">        
           <label for="fname2">Correo</label>
-          <input v-model="credencialesRegistrar.correo" type="text" id="fname2" name="firstname" placeholder="Un Correo..">
+          <input v-model="credencialesRegistrar.correo" type="email" id="fname2" name="firstname" placeholder="Un Correo..">
           <label for="lname2">Contraseña </label>
           <input v-model="credencialesRegistrar.password" type="password" id="lname2" name="lastname" placeholder="Una Contraseña..">
           
           <input type="submit" value="Registrarse" >
+          <p>
+            {{mensajeRespuesta}}
+          </p>
           <p class="botonChange" v-on:click="cambiarFormulario">Ingresar</p>
     
       </div>
@@ -24,21 +27,44 @@ export default {
                 Role:{
                 id:2
                 }
-            },      
+            },
+            mensajeRespuesta:""   
         }
     },
      methods:{         
     
         registrarse: async function(){
-        axios.defaults.headers.common['Authorization'] =`Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJVc2VyIiwiZXhwIjoxNTU1Mzk3MjgwLCJ1c2VyX2lkIjo2MzAsImNvcnJlbyI6ImNhbGF0byIsInJvbGVfaWQiOjJ9.0ioeKno4ZFOGA6yAcmkR3ccY2o-IqOeXqpkGGCnb1jPVlYq0XN8G9anVT5I4An_f0AYbp5ohH4ObhPvRFwa0Tw`     
-        axios
-        .post("http://www.lacoraza.com:8080/TokenServer/v1/usuarios/",this.credencialesRegistrar)
-        .then(res=>{
-            console.log(res);
-            
-        }).catch(error => {
+          this.mensajeRespuesta = "Resgistrando ..."
+          axios.defaults.headers.common['Authorization'] =`Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJVc2VyIiwiZXhwIjoxNTU1NDY0NDkwLCJ1c2VyX2lkIjo2MzAsImNvcnJlbyI6ImNhbGF0byIsInJvbGVfaWQiOjJ9.QKnSXB0LoveQ3iUKcch-22KSmPZorvo8KYANsLil5Jsm1shLdXEHb8HXtqb8belMr5YDAjC7mxFCTInu33_b4A`     
+          let response
+           try {
+          response = await axios.post("http://www.lacoraza.com:8080/TokenServer/v1/usuarios/",this.credencialesRegistrar)
+            if(response.status==202)
+            {
+              this.mensajeRespuesta = "Ya existe ese correo"
+            }
+            console.log(response);
+          } catch (error) {
             console.log(error);
-        })  
+          }
+          if(response.data.correo){
+            try {
+              this.mensajeRespuesta = "Resgistrando ..."
+            response =await axios.post("http://www.lacoraza.com:8080/TokenServer/getToken",this.credencialesRegistrar)
+                
+            } catch (error) {
+                console.log(error);
+            }
+            if(response.data.Token){
+                localStorage.token = response.data.Token
+              
+                localStorage.usuario = JSON.stringify(response.data.Usuario)
+                await this.$store.dispatch("getDataUsuarios")              
+            }
+          }
+          if(this.credencialesRegistrar.correo=="" || this.credencialesRegistrar.password=="" ){
+            this.mensajeRespuesta = "Campos vacìos"
+          }
         },
         cambiarFormulario: async function(){
            
@@ -50,7 +76,7 @@ export default {
 }
 </script>
 <style scoped>
-input[type=text], select {
+input[type=email], select {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -71,7 +97,7 @@ input[type=password], select {
 
 input[type=submit] {
   width: 100%;
-  background-color: #4CAF50;
+  background-color: #0b4c88;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -81,8 +107,9 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
-  background-color: #45a049;
+  background-color: #0c5497;
 }
+
 
 div {
   border-radius: 5px;

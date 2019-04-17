@@ -1,44 +1,73 @@
 <template>
     <div>
         <div class="container">
-            <div>
+            <div class="container__perfil">
                 <h2>
                     Perfil
                 </h2>
-                <img src="" alt="">
-                <h1>Nombre</h1>
-                <p>Correo</p>
+                <img v-if="usuario" :src="usuario.imagen" alt="">
+                <h1 v-if="usuario">{{usuario.nombre}}</h1>
+                <p v-if="usuario">correo: {{usuario.correo}}</p>
                 <h3>Tus suscripiones</h3>
-                <ul>
-                    <li>
-                        <p>Zona Otoño</p>
-                    </li>
-                    <li>
-                        <p>Zona Verano</p>
-                    </li>
+                <ul v-if="usuario">
+                    <template  v-for="sucripcion in usuarioSucripciones">
+                        <li  v-bind:key="sucripcion.id" v-if="sucripcion">Zona {{sucripcion.name}}</li>
+                    </template> 
                 </ul>
             </div>
-            <div>
+            <div class="container__resultados">
                 <h2>
-                    Genera tu suscripión Free
+                    Genera tu suscripción Free
                 </h2>
-                <p>Obten al azar hasta tres suscripones a nuestras zonas</p>
-                <input type="submit" value="Generar" v-on:click="Salir">
-                <p>resultados:</p>
-                <input type="submit" value="Ok" v-on:click="Salir">
-                <ul>
-                    <li><a href="">Zona Muggle</a></li>
-                    <li><a href="">Zona Black</a></li>
-                </ul>
+                <p>Gana hasta tres suscripciones a nuestras zonas</p>
+              <!--   <p>-zona muggle:28%   -zona verano y otoño 22%</p>
+                <p>-zona black: 16%   -zona premium: 11%</p> -->
+                <input v-if="!generar" class="botonGenerar" type="submit"  value="Participar!" v-on:click="generarSucripcionesResultado">
+                <div class="espacio">
+                    <p v-if="generar">resultados:</p>
+                     <ul v-if="generar">
+                        <template  v-for="sucripcion in sucripcionesResultado">
+                            <li  v-bind:key="sucripcion.id" v-if="sucripcion">Zona {{sucripcion.name}}</li>
+                        </template> 
+                    </ul>
+                </div>
+               
+                <input v-if="generar"  class="botonSalir" type="submit" value="Confirmar" v-on:click="confirmar">
             </div>
         </div>
-        <input type="submit" value="Salir" v-on:click="Salir">
-    </div>
+        <input class="botonSalir" type="submit" value="Salir" v-on:click="Salir">
+        <p>Tus zonas estaran guardadas y protegidas</p>
+        <p>Prueba con incognito si quieres xD</p>
+ </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
-    
-    created(){
+    data() {
+        return {
+            sucripcionesList:{
+                ['5']:{name:"Muggle",url:"",id:5},
+                ['6']:{name:"Black",url:"",id:6},
+                ['7']:{name:"Premium",url:"",id:7},
+                ['8']:{name:"Verano",url:"",id:8},
+                ['9']:{name:"Otoño",url:"",id:9},
+                },
+            sucripcionesResultado:[],
+            generar:false
+        }
+    },
+    computed: {
+        usuarioSucripciones(){
+            let array =[...this.$store.state.menu]
+            array.shift()
+            array.shift()
+            return array
+        },
+        usuario(){
+            return this.$store.state.usuario
+        }
+    },  
+    created(){      
         this.$store.commit("actualizarFondo","normal")
     },
     methods: {
@@ -51,7 +80,56 @@ export default {
                 localStorage.clear();
                 this.$router.push('/Home/Login')
               
-        }
+        },
+        generarSucripcionesResultado:function(){
+            this.generar=false
+            this.sucripcionesResultado=[]
+            let totalResultado =this.getNumeros(3,1),
+                sucripcionesList={...this.sucripcionesList},
+                sucripcionesResultado=[]            
+            while(true) {
+                let indice =this.getNumeros(18,1)
+                                 
+                    if(indice<6 && sucripcionesList[5]){
+                        sucripcionesResultado.push(sucripcionesList[5])
+                         sucripcionesList[5]=null                
+                    }else if(indice<10 && sucripcionesList[6]){
+                        sucripcionesList[6]=null
+                        sucripcionesResultado.push(sucripcionesList[8]) 
+                    }else if(indice<14 && sucripcionesList[7]){
+                        sucripcionesList[7]=null
+                        sucripcionesResultado.push(sucripcionesList[9]) 
+                    }else if(indice<17 && sucripcionesList[8]){
+                        sucripcionesList[8]=null
+                        sucripcionesResultado.push(sucripcionesList[6]) 
+                    }else if(indice<19 && sucripcionesList[9]){
+                        sucripcionesList[9]=null
+                        sucripcionesResultado.push(sucripcionesList[7]) 
+                    }else{
+                        continue
+                    }                   
+                    totalResultado --
+                
+                if(totalResultado==0){
+                    break
+                }
+            }
+          this.sucripcionesResultado=[...sucripcionesResultado]
+          this.generar=true
+        },        
+        getNumeros:function(máximo,mínimo){
+            return Math.floor(Math.random() * ((máximo+1) - mínimo) + mínimo);
+        },
+        confirmar: async function(){
+            
+            let token = localStorage.token
+            axios.defaults.headers.common['Authorization'] =`Bearer ${token}`
+            let res = await axios.post("http://www.lacoraza.com:8080/TokenServer/v1/opciones",this.sucripcionesResultado)
+           console.log(res);
+           localStorage.Menu = JSON.stringify(this.sucripcionesResultado)
+           this.$store.commit('actualizarMenu', this.sucripcionesResultado)
+           this.generar=!this.generar
+        },
     },
 }
 </script>
@@ -60,8 +138,8 @@ export default {
     $tablet: 814px;
     $laptop:1025px;
     $desk:1300px;
-    input[type=submit] {
-        width: 25%;
+    .botonSalir {
+        width: 20%;
         background-color: #4CAF50;
         color: white;
         padding: 14px 20px;
@@ -71,17 +149,50 @@ export default {
         cursor: pointer;
     }
 
-    input[type=submit]:hover {
+    .botonSalir:hover {
     background-color: #45a049;
     }
+    .botonGenerar {
+        width:20%;
+        background-color: #fa500d;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center
+    }
+
+    .botonGenerar:hover {
+        background-color: #f57520;
+    }
     .container{
-        margin-top:15vh; 
-        height: 60vh;
+        margin:auto;
+        margin-top:10vh; 
+        height: 55vh;
+        max-width: 1100px;
         display: grid;
         grid-template-columns: 50% 50%;
     }
     h2{margin:0; 
         
     }
+    ul{
+        width:8em;
+        margin: 0 0 1em 0;
+        padding: 0
+    }
+    .container__perfil, .container__resultados{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center
+    }
+    .espacio{
+            min-height: 6rem;
+    }
+    
+
 </style>
 
