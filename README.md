@@ -1,4 +1,4 @@
-# vuePlantilla
+# Spa de lacoraza.com
 
 ## Project setup
 ```
