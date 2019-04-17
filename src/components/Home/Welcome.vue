@@ -32,6 +32,7 @@ export default {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    
     }
 
     input[type=submit]:hover {

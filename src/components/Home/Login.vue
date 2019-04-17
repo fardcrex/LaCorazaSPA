@@ -14,6 +14,7 @@
 <script>
 import axios from 'axios'
 import { async } from 'q';
+import config from '../../config.js'
 export default {
 
     data() {
@@ -31,7 +32,7 @@ export default {
           this.mensajeRespuesta = "Ingresando ..."
           let response 
           try {
-          response =await axios.post("http://www.lacoraza.com:8080/TokenServer/getToken",this.credencialesIngresar)
+          response =await axios.post(config.URL_getToken,this.credencialesIngresar)
             if(response.status==200){
               this.mensajeRespuesta = "Usuario Inexistente" 
             }

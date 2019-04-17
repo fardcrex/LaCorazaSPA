@@ -13,6 +13,7 @@ import Perfil from './views/Perfil.vue'
 import About from './views/About.vue'
 import store from './store';
 import axios from 'axios'
+import config from './config'
 Vue.use(Router)
 
 let router = new Router({
@@ -108,7 +109,7 @@ router.beforeEach(async (to,from,next)=>{
      // console.log(`no usuario`);
       let token = localStorage.token      
       axios.defaults.headers.common['Authorization'] =`Bearer ${token}`
-      axios.get(`http://www.lacoraza.com:8080/TokenServer/v1/opciones`).
+      axios.get(config.URL_opciones).
       then( response=>{        
       //  console.log(to);
         if(response.status==202){

@@ -18,6 +18,7 @@
 <script>
 import axios from 'axios'
 import { async } from 'q';
+import config from '../../config.js'
 export default {
     data() {
         return {
@@ -35,10 +36,10 @@ export default {
     
         registrarse: async function(){
           this.mensajeRespuesta = "Resgistrando ..."
-          axios.defaults.headers.common['Authorization'] =`Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJVc2VyIiwiZXhwIjoxNTU1NDY0NDkwLCJ1c2VyX2lkIjo2MzAsImNvcnJlbyI6ImNhbGF0byIsInJvbGVfaWQiOjJ9.QKnSXB0LoveQ3iUKcch-22KSmPZorvo8KYANsLil5Jsm1shLdXEHb8HXtqb8belMr5YDAjC7mxFCTInu33_b4A`     
+          axios.defaults.headers.common['Authorization'] =`Bearer ${config.KEY_REGISTRO}`     
           let response
            try {
-          response = await axios.post("http://www.lacoraza.com:8080/TokenServer/v1/usuarios/",this.credencialesRegistrar)
+          response = await axios.post(config.URL_usuarios,this.credencialesRegistrar)
             if(response.status==202)
             {
               this.mensajeRespuesta = "Ya existe ese correo"
@@ -50,7 +51,7 @@ export default {
           if(response.data.correo){
             try {
               this.mensajeRespuesta = "Resgistrando ..."
-            response =await axios.post("http://www.lacoraza.com:8080/TokenServer/getToken",this.credencialesRegistrar)
+            response =await axios.post(config.URL_getToken,this.credencialesRegistrar)
                 
             } catch (error) {
                 console.log(error);
