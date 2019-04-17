@@ -33,7 +33,7 @@ export default new Vuex.Store({
       let usuario = JSON.parse(localStorage.usuario),        
           token = localStorage.token
           
-          console.log("getadata");
+          
       axios.defaults.headers.common['Authorization'] =`Bearer ${token}`  
       axios.all([
           axios.get(config.URL_opciones),
@@ -41,7 +41,7 @@ export default new Vuex.Store({
         ])
         .then(axios.spread((response1, response2) => {
           
-          console.log(response2);
+          
           if(response2.data.correo){
             
             commit('actualizarMenu',response1.data)
@@ -49,10 +49,10 @@ export default new Vuex.Store({
           }
           if(!localStorage.Menu){
             localStorage.Menu = JSON.stringify(response1.data)
-            console.log("PUSH");
+           
             router.push({name:"Perfil"})   
           }  
-          console.log("PUSH2");
+          
           localStorage.Menu = JSON.stringify(response1.data)
         }))
         .catch(error => {
